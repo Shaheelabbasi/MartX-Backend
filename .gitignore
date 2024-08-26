@@ -1,0 +1,53 @@
+# Node.js specific
+node_modules/
+npm-debug.log*
+yarn-error.log
+.npmrc
+.yarnrc
+
+# Editor config files
+*.sublime-project
+*.sublime-workspace
+
+# IDE specific files
+.vscode/
+*.DS_Store
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+*.err
+
+# Test results
+coverage/
+test-results/
+
+# Build artifacts
+dist/
+build/
+
+# Temporary files
+*.swp
+*.bak
+*.tmp
+*.swx
+*.old
+
+# IDE specific files
+.idea/
+.project
+.csproj
+.sln
+
+# Package-lock files
+package-lock.json
+yarn.lock
+
+# Secrets and sensitive data
+secrets/
+config/secrets.json
+.env
