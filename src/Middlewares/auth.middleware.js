@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken'
 import ApiError from "../Utils/ApiError.js";
 import { asyncHandler } from "../Utils/asyncHandler.js";
-import { User } from "../Models/usermodel.js";
+import { User } from "../Models/user.model.js";
+
+
 const VerifyJwt = asyncHandler(async (req, res, next) => {
 
     const incommingToken = req.cookies?.token || req.cookies?.mycookie
@@ -31,8 +33,7 @@ const VerifyJwt = asyncHandler(async (req, res, next) => {
     const user = await User.findById(decodedToken._id).select("-password -email");
 
     req.user = user;
-    req.toknen = incommingToken;
-    //jugar to prevent extra function calling
+    
     next();
 
 

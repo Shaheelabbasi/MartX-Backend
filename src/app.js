@@ -8,6 +8,8 @@ app.use(Cookieparser())
 app.use(express.urlencoded({extended:true}))
 app.use(express.static("public"))
 import { adminRouter } from './Routes/admin.router.js';
+import { userRouter } from './Routes/user.router.js';
+
 
 
 //Routers
@@ -15,6 +17,7 @@ import { adminRouter } from './Routes/admin.router.js';
 
 app.use("/MartX/auth",authRouter)
 app.use("/MartX/admin",adminRouter)
+app.use("/MartX/user",userRouter)
 
 
 export default app;

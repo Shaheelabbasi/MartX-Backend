@@ -132,7 +132,7 @@ const getAllProducts=asyncHandler(async(req,res)=>{
 
     }
 
-    const sortedProducts=await Product.find(searchQuery).sort({price:criteria}).limit(1)
+    const sortedProducts=await Product.find(searchQuery).sort({price:criteria})
 
     res.json(
         new ApiResponse(

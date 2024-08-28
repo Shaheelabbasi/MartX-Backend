@@ -1,11 +1,8 @@
 import mongoose from "mongoose";
 
-
-// creating a cart table or collection
-// one indival object inside the cart would be a document or a row
 const cartSchema=new mongoose.Schema({
 
-    userId:{
+    User:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User"
     },
