@@ -1,9 +1,13 @@
+import dotenv from 'dotenv'
+dotenv.config({path:"./.env"})
 import { asyncHandler } from "../Utils/asyncHandler.js";
 import ApiResponse from "../Utils/Apiresponse.js";
 import Apierror from "../Utils/ApiError.js";
 import { Cart } from "../Models/cart.model.js";
 import { Product } from "../Models/product.model.js";
+import {Stripe} from "stripe";
 
+ const stripe=new Stripe(process.env.STRIPE_SECRET_KEY)
 
 
 const getcartTotal=async(data)=>{
@@ -25,6 +29,27 @@ for(let i=0;i<data.length;i++)
 
 return TotalPrice;
 
+
+}
+
+
+function generateLineItems(items){
+    
+  return items.map((item)=>(
+
+         {
+           
+            price_data: {
+              currency: 'inr',
+              product_data: {
+                name: item.productId.name,
+              },
+           
+              unit_amount:  item.productId.price*100
+            },
+            quantity: item.quantity,
+          }
+   ) )
 
 }
 const addTocart=asyncHandler(async(req,res)=>{
@@ -123,7 +148,32 @@ const removeFromCart=asyncHandler(async(req,res)=>{
 
 
 const HandlePayment=asyncHandler(async(req,res)=>{
+const userCart=await Cart.findOne({User:req.user._id}).populate("items.productId")
 
+if(!userCart)
+{
+    throw new Apierror(400,"Please add some items to proceed to payment")
+}
+
+const{items,totalAmount}=userCart
+
+console.log("items:",items)
+console.log("total:",totalAmount)
+
+
+
+const mylineItems=generateLineItems(items)
+
+
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: mylineItems,
+        mode: 'payment',
+        success_url: 'https://your-website.com/success',
+        cancel_url: 'https://your-website.com/cancel',
+      })
+
+      res.json(session.url)
 
 })
 export{
