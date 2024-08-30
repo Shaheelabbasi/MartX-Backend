@@ -1,9 +1,10 @@
 import { User } from "../Models/user.model.js";
 
 import ApiResponse from "../Utils/Apiresponse.js";
-import ApiError from '../Utils/ApiError.js'
+import Apierror from '../Utils/ApiError.js'
 import { asyncHandler } from "../Utils/asyncHandler.js";
-
+import OtpGenerator from 'otp-generator'
+import { OTP } from "../Models/otp.model.js";
 const SignUp = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -105,9 +106,103 @@ const logout = (req, res) => {
 }
 
 
+const ForgetPassword=asyncHandler(async(req,res)=>{
+
+  const {email}=req.body
+
+  const existingUser=await User.findOne({email})
+
+  if(!existingUser)
+  {
+      throw new Apierror(400,"User does not exist")
+  }
+ 
+
+  const otp=OtpGenerator.generate(6,{ upperCaseAlphabets: false, specialChars: false,lowerCaseAlphabets:false })
+
+  const ans=await OTP.create({
+    email,
+    otp
+  })
+
+  res.json(
+    new ApiResponse(
+      200,
+      `please verify the otp we have sent to ${email}`
+
+    )
+  )
+
+
+})
+
+
+const VerifyOtp=asyncHandler(async(req,res)=>{
+const {otp}=req.body;
+
+const existingOtp=await OTP.findOne({otp})
+
+if(!existingOtp)
+{
+  throw new Apierror(400,"otp is expired or invalid")
+}
+
+if(!existingOtp.otp == otp)
+{
+  throw new Apierror(400,"otps dont match")
+   
+}
+
+res.json(
+  new ApiResponse(
+      200,
+      "otp verified successfully"
+
+  )
+)
+
+})
+
+
+const resetPassword=asyncHandler(async(req,res)=>{
+
+const{email,newpassword}=req.body
+
+if(!email || !newpassword)
+{
+  throw new Apierror(400,"please provide all the credentials")
+}
+const  existingUser=User.findOne({email})
+
+
+if(!existingUser)
+{
+  throw new Apierror(400,'please provide valid email address')
+}
+
+
+existingUser.password=newpassword
+const updatedUser=await existingUser.save();
+if(!updatedUser)
+{
+  throw new Apierror(500,"Error updating the userpassword")
+}
+
+res.json(
+  new ApiResponse(
+    200,
+    updatedUser,
+    "successfully updated password "
+  )
+)
+
+
+})
 
 export {
   SignUp,
    Login,
   logout,
+  ForgetPassword,
+  VerifyOtp
 }

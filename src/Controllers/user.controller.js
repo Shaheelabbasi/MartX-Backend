@@ -6,6 +6,7 @@ import Apierror from "../Utils/ApiError.js";
 import { Cart } from "../Models/cart.model.js";
 import { Product } from "../Models/product.model.js";
 import {Stripe} from "stripe";
+import { User } from '../Models/user.model.js';
 
  const stripe=new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -176,7 +177,13 @@ const mylineItems=generateLineItems(items)
       res.json(session.url)
 
 })
+
+
+
+
+
 export{
     addTocart,
-    HandlePayment
+    HandlePayment,
+    
 }
