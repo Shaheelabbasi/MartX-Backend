@@ -6,11 +6,11 @@ import { asyncHandler } from "../Utils/asyncHandler.js";
 import OtpGenerator from 'otp-generator'
 import { OTP } from "../Models/otp.model.js";
 const SignUp = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password,role } = req.body;
 
 
   if ([username, email, password].some((filed) => filed.trim() === "")) {
-    throw new ApiError(400);
+    throw new Apierror(400);
   }
 
   const existingUser = await User.findOne({
@@ -27,7 +27,8 @@ const SignUp = asyncHandler(async (req, res) => {
   const newUser = await User.create({
     username,
     email,
-    password
+    password,
+    role
   })
 
 
