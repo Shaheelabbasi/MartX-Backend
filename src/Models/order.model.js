@@ -18,8 +18,9 @@ const orderSchema = new Schema({
     zip: { type: String },
     country: { type: String }
   },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+ 
+},{
+  timestamps:true
 });
 
 const Order = mongoose.model('Order', orderSchema);
